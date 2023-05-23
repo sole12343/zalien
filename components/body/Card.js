@@ -33,7 +33,14 @@ export default function Card() {
   return (
     <div className="flex flex-col items-center bg-gray-900 p-5 rounded-lg shadow-md hover:shadow-lg max-w-sm mx-auto text-white">
       <div className="w-full overflow-hidden rounded-t-lg">
-        <img className="w-full h-auto" src="/images/tesla.jpg" alt="tesla" />
+        <video
+          className="w-full h-auto object-cover"
+          src="/videos/bored&dangerous.mp4"
+          alt="bored&dangerous"
+          autoPlay
+          loop
+          muted
+        ></video>
       </div>
       <div className="flex flex-col justify-between items-center w-full mt-4 text-center">
         <div className="mb-2">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import ConnectWalletButton from "../buttons/ConnectWalletButton";
+import { RainbowConnectButton } from "../buttons/RainbowConnectWalletButton";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -81,7 +82,8 @@ function Header() {
             </ul>
           </nav>
 
-          <ConnectWalletButton />
+          {/* <ConnectWalletButton /> */}
+          <RainbowConnectButton />
         </div>
       </div>
     </header>

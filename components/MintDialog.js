@@ -7,11 +7,11 @@ export default function MintDialog({ errorMessage }) {
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
 
-  console.log(errorMessage);
-
   const matchError = (error) => {
     const mintRegex =
       /The contract function "mint" reverted with the following reason:\n(.+?)\n\nContract Call:/;
+    const bluechipMintRegex =
+      /The contract function "blueChipMint" reverted with the following reason:\n(.+?)\n\nContract Call:/;
     const signatureRegex = /Request Arguments:[\s\S]+?\n\nDetails: (.+)/;
     const balanceRegex =
       /insufficient funds for gas \* price \+ value: address [\w]+ have ([\d]+) want ([\d]+)/;
@@ -19,6 +19,10 @@ export default function MintDialog({ errorMessage }) {
     const mintMatch = error.match(mintRegex);
     if (mintMatch?.[1]) {
       return mintMatch[1];
+    }
+    const bluechipMintMatch = error.match(bluechipMintRegex);
+    if (bluechipMintMatch?.[1]) {
+      return bluechipMintMatch[1];
     }
 
     const signatureMatch = error.match(signatureRegex);

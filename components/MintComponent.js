@@ -45,16 +45,16 @@ const MintComponent = () => {
     }
   }, [totalSupplyData]);
 
-  const { data: mintStatusData } = useContractRead({
+  const { data: publicMintStatusData } = useContractRead({
     ...contractConfig,
     functionName: "publicMintStatus",
   });
 
   useEffect(() => {
-    if (mintStatusData) {
-      setMintStatus(ethers.toNumber(mintStatusData));
+    if (publicMintStatusData) {
+      setMintStatus(ethers.toNumber(publicMintStatusData));
     }
-  }, [mintStatusData]);
+  }, [publicMintStatusData]);
 
   useEffect(() => {
     if (mintStatus === 1 || mintStatus === 2) {
@@ -89,6 +89,31 @@ const MintComponent = () => {
   });
 
   const isMinted = txSuccess;
+
+  // blupchip mint
+  const {
+    data: bluechipMintData,
+    write: bluechipMint,
+    isLoading: isBluechipMintLoading,
+    isSuccess: isBluechipMintStarted,
+    error: bluechipMintError,
+  } = useContractWrite({
+    ...contractConfig,
+    functionName: "blueChipMint",
+    args: [quantity],
+    account: address,
+    value: ethers.parseEther(mintCost.toString()),
+  });
+
+  const {
+    data: bluechipTxData,
+    isSuccess: bluechipTxSuccess,
+    error: bluechipTxError,
+  } = useWaitForTransaction({
+    hash: bluechipMintData?.hash,
+  });
+
+  const isBluechipMinted = bluechipTxSuccess;
 
   return (
     <div className="text-white min-h-screen mt-28 flex flex-col">
@@ -141,9 +166,7 @@ const MintComponent = () => {
             <div className="text-sm uppercase tracking-wider">
               Current Mint:
             </div>
-            <p className="text-lg ml-20">
-              {totalMinted} / 4200
-            </p>
+            <p className="text-lg ml-20">{totalMinted} / 4200</p>
           </div>
 
           <div className="flex flex-col md:flex-row md:items-center mb-4">
@@ -197,20 +220,24 @@ const MintComponent = () => {
             {mounted
               ? isConnected && (
                   <button
-                    disabled={isMintLoading || (isMintStarted && !isMinted)}
+                    disabled={
+                      isBluechipMintLoading ||
+                      (isBluechipMintStarted && !isBluechipMinted)
+                    }
                     className="mt-12 w-full py-3 px-4 bg-purple-500 text-white font-bold rounded-lg shadow-md hover:bg-purple-600 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-75"
-                    data-mint-loading={isMintLoading}
-                    data-mint-started={isMintStarted}
-                    onClick={() => mint?.()}
+                    data-mint-loading={isBluechipMintLoading}
+                    data-mint-started={isBluechipMintStarted}
+                    onClick={() => bluechipMint?.()}
                   >
-                    {isMintLoading && "Waiting for approval"}
-                    {isMintStarted && !isMinted ? (
+                    {isBluechipMintLoading && "Waiting for approval"}
+                    {isBluechipMintStarted && !isBluechipMinted ? (
                       <div>
                         Minting{"  "}
                         <span className="loading loading-dots loading-xs"></span>
                       </div>
                     ) : (
-                      (!isMintLoading || isMinted) && "Bluechip Mint"
+                      (!isBluechipMintLoading || isBluechipMinted) &&
+                      "Bluechip Mint"
                     )}
                   </button>
                 )
@@ -236,7 +263,6 @@ const MintComponent = () => {
                   </button>
                 )
               : null}
-
             {mounted
               ? !isConnected && (
                   <p className="mt-12">Please Connect your Wallet!</p>
@@ -248,6 +274,12 @@ const MintComponent = () => {
               : null}
 
             {mounted
+              ? bluechipMintError && (
+                  <MintDialog errorMessage={bluechipMintError.message} />
+                )
+              : null}
+
+            {mounted
               ? isMinted &&
                 mintData &&
                 txData && (
@@ -255,6 +287,18 @@ const MintComponent = () => {
                     <MintedDialog
                       mintDataHash={mintData.hash}
                       txData={txData}
+                    />
+                  </>
+                )
+              : null}
+
+            {mounted
+              ? isBluechipMinted &&
+                bluechipMintData && (
+                  <>
+                    <MintedDialog
+                      mintDataHash={bluechipMintData.hash}
+                      txData={bluechipTxData}
                     />
                   </>
                 )

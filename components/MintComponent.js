@@ -230,7 +230,8 @@ const MintComponent = () => {
 
           <div className="flex flex-col justify-center items-center">
             {mounted
-              ? isConnected && (
+              ? isConnected &&
+                mintStatus === 2 && (
                   <button
                     disabled={
                       isWhiteListMintLoading ||
@@ -255,7 +256,8 @@ const MintComponent = () => {
                 )
               : null}
             {mounted
-              ? isConnected && (
+              ? isConnected &&
+                mintStatus === 1 && (
                   <button
                     disabled={
                       isBluechipMintLoading ||
@@ -280,7 +282,9 @@ const MintComponent = () => {
                 )
               : null}
             {mounted
-              ? isConnected && (
+              ? isConnected &&
+                mintStatus !== 1 &&
+                mintStatus !== 2 && (
                   <button
                     disabled={isMintLoading || (isMintStarted && !isMinted)}
                     className="mt-12 w-full py-3 px-4 bg-purple-500 text-white font-bold rounded-lg shadow-md hover:bg-purple-600 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-75"

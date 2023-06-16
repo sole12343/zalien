@@ -7,8 +7,6 @@ export default function MintDialog({ errorMessage }) {
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
 
-  console.log(errorMessage);
-
   const matchError = (error) => {
     const mintRegex =
       /The contract function "mint" reverted with the following reason:\n(.+?)\n\nContract Call:/;

@@ -9,6 +9,9 @@ import { ethers } from "ethers";
 import { abi } from "../zalien-abi.js";
 import MintDialog from "./MintDialog.js";
 import MintedDialog from "./MintedDialog.js";
+import { MerkleTree } from "merkletreejs";
+import keccak256 from "keccak256";
+import { whiteList } from "@/whiteList.js";
 
 const privatePrice = 0.069;
 const publicPrice = 0.096;
@@ -115,6 +118,36 @@ const MintComponent = () => {
 
   const isBluechipMinted = bluechipTxSuccess;
 
+  // whiteList mint
+  const leaves = whiteList.map((x) => keccak256(x));
+  const tree = new MerkleTree(leaves, keccak256);
+  const leaf = keccak256(address);
+  const proof = tree.getProof(leaf).map((x) => `0x${x.data.toString("hex")}`);
+
+  const {
+    data: whiteListMintData,
+    write: whiteListMint,
+    isLoading: isWhiteListMintLoading,
+    isSuccess: isWhiteListMintStarted,
+    error: whiteListMintError,
+  } = useContractWrite({
+    ...contractConfig,
+    functionName: "allowListMint",
+    args: [proof, quantity],
+    account: address,
+    value: ethers.parseEther(mintCost.toString()),
+  });
+
+  const {
+    data: whiteListTxData,
+    isSuccess: whiteListTxSuccess,
+    error: whiteListTxError,
+  } = useWaitForTransaction({
+    hash: whiteListMintData?.hash,
+  });
+
+  const isWhiteListMinted = whiteListTxSuccess;
+
   return (
     <div className="text-white min-h-screen mt-28 flex flex-col">
       <h2 className="text-4xl md:text-6xl font-almendra text-center">
@@ -199,20 +232,24 @@ const MintComponent = () => {
             {mounted
               ? isConnected && (
                   <button
-                    disabled={isMintLoading || (isMintStarted && !isMinted)}
+                    disabled={
+                      isWhiteListMintLoading ||
+                      (isWhiteListMintStarted && !isWhiteListMinted)
+                    }
                     className="mt-12 w-full py-3 px-4 bg-purple-500 text-white font-bold rounded-lg shadow-md hover:bg-purple-600 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-75"
-                    data-mint-loading={isMintLoading}
-                    data-mint-started={isMintStarted}
-                    onClick={() => mint?.()}
+                    data-mint-loading={isWhiteListMintLoading}
+                    data-mint-started={isWhiteListMintStarted}
+                    onClick={() => whiteListMint?.()}
                   >
-                    {isMintLoading && "Waiting for approval"}
-                    {isMintStarted && !isMinted ? (
+                    {isWhiteListMintLoading && "Waiting for approval"}
+                    {isWhiteListMintStarted && !isWhiteListMinted ? (
                       <div>
                         Minting{"  "}
                         <span className="loading loading-dots loading-xs"></span>
                       </div>
                     ) : (
-                      (!isMintLoading || isMinted) && "White List Mint"
+                      (!isWhiteListMintLoading || isWhiteListMinted) &&
+                      "WhiteList Mint"
                     )}
                   </button>
                 )
@@ -263,6 +300,7 @@ const MintComponent = () => {
                   </button>
                 )
               : null}
+
             {mounted
               ? !isConnected && (
                   <p className="mt-12">Please Connect your Wallet!</p>
@@ -280,6 +318,12 @@ const MintComponent = () => {
               : null}
 
             {mounted
+              ? whiteListMintError && (
+                  <MintDialog errorMessage={whiteListMintError.message} />
+                )
+              : null}
+
+            {mounted
               ? isMinted &&
                 mintData &&
                 txData && (
@@ -291,7 +335,6 @@ const MintComponent = () => {
                   </>
                 )
               : null}
-
             {mounted
               ? isBluechipMinted &&
                 bluechipMintData && (
@@ -299,6 +342,17 @@ const MintComponent = () => {
                     <MintedDialog
                       mintDataHash={bluechipMintData.hash}
                       txData={bluechipTxData}
+                    />
+                  </>
+                )
+              : null}
+            {mounted
+              ? isWhiteListMinted &&
+                whiteListMintData && (
+                  <>
+                    <MintedDialog
+                      mintDataHash={whiteListMintData.hash}
+                      txData={whiteListTxData}
                     />
                   </>
                 )

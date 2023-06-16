@@ -6,7 +6,7 @@ export default function Content() {
       </h2>
       <hr className="w-[29px] border-t border-gray-500 mb-4" />
       <h1 className="text-transparent bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 bg-clip-text text-[140px] leading-[106px] font-[Plus Jakarta Sans] font-black mb-4">
-        420 CLUB
+        Zalien Club
       </h1>
       <p className="text-gray-100 text-[18px] leading-[28px] font-[Plus Jakarta Sans]">
         Explore the Zalien Universe - 4200 Unique and Entertaining Alien NFTs on

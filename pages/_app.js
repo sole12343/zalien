@@ -1,26 +1,24 @@
 import "@/styles/globals.css";
-
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
-import Head from "next/head";
 import "@rainbow-me/rainbowkit/styles.css";
+import Head from "next/head";
 import {
   getDefaultWallets,
   RainbowKitProvider,
   darkTheme,
 } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { mainnet, polygon, optimism, arbitrum } from "wagmi/chains";
+import { goerli, mainnet } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+import Layout from "@/components/layout/Layout";
 
 const { chains, publicClient } = configureChains(
-  [mainnet, polygon, optimism, arbitrum],
-  [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
+  [goerli], // mainnet
+  [alchemyProvider({ apiKey: process.env.alchemyId }), publicProvider()]
 );
 const { connectors } = getDefaultWallets({
   appName: "Zalien",
-  projectId: process.env.ALCHEMY_ID,
+  projectId: process.env.walletConnectProjectId,
   chains,
 });
 const wagmiConfig = createConfig({
@@ -31,7 +29,7 @@ const wagmiConfig = createConfig({
 
 export default function App({ Component, pageProps }) {
   return (
-    <>
+    <div>
       <WagmiConfig config={wagmiConfig}>
         <RainbowKitProvider
           chains={chains}
@@ -47,11 +45,11 @@ export default function App({ Component, pageProps }) {
             <title>Zalien</title>
             <meta name="description" content="Zalien homepage" />
           </Head>
-          <Header />
-          <Component {...pageProps} />
-          <Footer />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </RainbowKitProvider>
       </WagmiConfig>
-    </>
+    </div>
   );
 }

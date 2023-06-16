@@ -35,7 +35,7 @@ function Roadmap() {
         </h2>
       </div>
       <div className="flex flex-col md:flex-row justify-center mt-10 md:mt-20 px-4 md:px-20">
-        <div className="md:w-1/2 pr-4 ml-48">
+        <div className="md:w-1/2 pr-4 ml-48 mt-8">
           <ul className="text-lg font-ibm-plex-sans">
             {milestones.map((milestone, index) => (
               <li key={index} className="mb-4 flex items-center">

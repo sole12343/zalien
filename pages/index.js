@@ -8,20 +8,25 @@ import Guest from "@/components/Guest";
 export default function Home() {
   return (
     <>
-      <div id="home" className="mt-14 flex flex-col md:flex-row justify-center items-start md:items-center space-x-0 md:space-x-4 w-full mx-auto">
+      <div
+        id="home"
+        className="mt-20 flex flex-col md:flex-row justify-center items-start md:items-center space-x-0 md:space-x-4 w-full mx-auto"
+      >
         <Content />
         <Card />
       </div>
-      <div id="about">
+      <div id="about" className="flex justify-center">
         <About />
       </div>
-      <div id="roadmap">
+      <div id="roadmap" className="flex  justify-center">
         <Roadmap />
       </div>
-      <div id="team">
+      <div id="team" className="flex  justify-center">
         <Team />
       </div>
-      <Guest />
+      <div id="guest" className="flex justify-center">
+        <Guest />
+      </div>
     </>
   );
 }

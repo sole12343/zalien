@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import ConnectWalletButton from "../buttons/ConnectWalletButton";
 import { RainbowConnectButton } from "../buttons/RainbowConnectWalletButton";
 
 function Header() {
@@ -32,8 +31,11 @@ function Header() {
       <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex flex-wrap items-center justify-between">
           <div className="flex items-center">
-            <Link href="#home" passHref>
-              <span className="text-rose-500 text-xl font-bold">Z</span>
+            <Link href="/" passHref>
+              {/* <span className="text-orange-500 text-xl font-bold">Z</span> */}
+              <span className="text-transparent bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 bg-clip-text text-xl font-bold">
+                Z
+              </span>
               <span className="text-white text-xl font-bold">ALIEN</span>
             </Link>
           </div>
@@ -53,7 +55,7 @@ function Header() {
             <ul className="sm:flex items-center space-y-4 sm:space-y-0 sm:space-x-8 p-4 sm:p-0">
               <li>
                 <Link
-                  href="#about"
+                  href="/#about"
                   passHref
                   className="text-white font-semibold text-lg"
                   onClick={() => setMenuOpen(false)}
@@ -63,7 +65,7 @@ function Header() {
               </li>
               <li>
                 <Link
-                  href="#team"
+                  href="/#team"
                   className="text-white font-semibold text-lg"
                   onClick={() => setMenuOpen(false)}
                 >
@@ -72,17 +74,26 @@ function Header() {
               </li>
               <li>
                 <Link
-                  href="#roadmap"
+                  href="/#roadmap"
                   className="text-white font-semibold text-lg"
                   onClick={() => setMenuOpen(false)}
                 >
                   Roadmap
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="https://docs.zalien.io/"
+                  target="_blank"
+                  className="text-white font-semibold text-lg"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Docs
+                </Link>
+              </li>
             </ul>
           </nav>
 
-          {/* <ConnectWalletButton /> */}
           <RainbowConnectButton />
         </div>
       </div>

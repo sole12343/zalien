@@ -53,12 +53,12 @@ const Team = () => {
           Team
         </span>
       </div>
-      <div className="mt-0">
+      <div className="mt-4">
         <p className="text-inter text-gray-400 text-center text-2xl">
           Learn more about the psychedelic part of this team.
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8 mx-4 md:mx-48">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-12 mx-4 md:mx-48">
         {members.map((member, index) => (
           <div key={index} className="flex flex-col items-center">
             <img

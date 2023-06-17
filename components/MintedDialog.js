@@ -65,7 +65,8 @@ export default function MintedDialog({ mintDataHash, txData }) {
                   <p>
                     View on{" "}
                     <Link
-                      href={`https://goerli.etherscan.io/tx/${mintDataHash}`}
+                      // href={`https://goerli.etherscan.io/tx/${mintDataHash}`}
+                      href={`https://etherscan.io/tx/${mintDataHash}`}
                       className="text-blue-500 underline"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -76,7 +77,8 @@ export default function MintedDialog({ mintDataHash, txData }) {
                   <p>
                     View on{" "}
                     <Link
-                      href={`https://testnets.opensea.io/assets/goerli/${txDataHash}/${tokenId}`}
+                      // href={`https://testnets.opensea.io/assets/goerli/${txDataHash}/${tokenId}`}
+                      href={`https://opensea.io/assets/ethereum/${txDataHash}/${tokenId}`}
                       className="text-blue-500 underline"
                       target="_blank"
                       rel="noopener noreferrer"

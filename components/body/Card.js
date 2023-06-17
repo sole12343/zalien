@@ -103,7 +103,7 @@ export default function Card() {
       <div className="mt-6 w-full">
         <button
           onClick={handleButtonClick}
-          className="w-full py-3 px-4 bg-purple-500 text-white font-bold rounded-b-lg shadow-md hover:bg-purple-600 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-75"
+          className="w-full py-3 px-4 bg-purple-500 text-white font-bold rounded-lg shadow-md hover:bg-purple-600 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-75"
         >
           Go to Mint
         </button>

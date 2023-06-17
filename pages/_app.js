@@ -7,13 +7,13 @@ import {
   darkTheme,
 } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { goerli, mainnet } from "wagmi/chains";
+import { mainnet } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import Layout from "@/components/layout/Layout";
 
 const { chains, publicClient } = configureChains(
-  [goerli], // mainnet
+  [mainnet], // goerli
   [alchemyProvider({ apiKey: process.env.alchemyId }), publicProvider()]
 );
 const { connectors } = getDefaultWallets({

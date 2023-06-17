@@ -29,9 +29,9 @@ const MintComponent = () => {
 
   const { address, isConnected } = useAccount();
 
-  // mainnet 0x467415edF9FEe95F206b44Fc4DFBb34F55FaA352
+  // goerli "0x95FE1fDFf3C83abaB78123df3788BA51cEcC4481"
   const contractConfig = {
-    address: "0x95FE1fDFf3C83abaB78123df3788BA51cEcC4481",
+    address: "0x467415edF9FEe95F206b44Fc4DFBb34F55FaA352",
     abi,
   };
 

@@ -6,12 +6,9 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 import { ethers } from "ethers";
-import { abi } from "../zalien-abi.js";
+import { abi } from "../data/zalien-abi.js";
 import MintDialog from "./MintDialog.js";
 import MintedDialog from "./MintedDialog.js";
-import { MerkleTree } from "merkletreejs";
-import keccak256 from "keccak256";
-import { whiteList } from "@/whiteList.js";
 
 const privatePrice = 0.069;
 const publicPrice = 0.096;
@@ -21,6 +18,7 @@ const MintComponent = () => {
   const [mintCost, setMintCost] = useState(0);
   const [totalMinted, setTotalMinted] = useState(0);
   const [mintStatus, setMintStatus] = useState(0);
+  const [merkleProof, setMerkleProof] = useState([]);
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -119,10 +117,17 @@ const MintComponent = () => {
   const isBluechipMinted = bluechipTxSuccess;
 
   // whiteList mint
-  const leaves = whiteList.map((x) => keccak256(x));
-  const tree = new MerkleTree(leaves, keccak256);
-  const leaf = keccak256(address);
-  const proof = tree.getProof(leaf).map((x) => `0x${x.data.toString("hex")}`);
+  const fetchProof = async (address) => {
+    const response = await fetch(`./api/proof?address=${address}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        // "x-address": address,
+      },
+    });
+    const data = await response.json();
+    setMerkleProof(data);
+  };
 
   const {
     data: whiteListMintData,
@@ -133,10 +138,16 @@ const MintComponent = () => {
   } = useContractWrite({
     ...contractConfig,
     functionName: "allowListMint",
-    args: [proof, quantity],
+    args: [merkleProof, quantity],
     account: address,
     value: ethers.parseEther(mintCost.toString()),
   });
+
+  useEffect(() => {
+    if (merkleProof.length > 0) {
+      whiteListMint?.();
+    }
+  }, [merkleProof]);
 
   const {
     data: whiteListTxData,
@@ -240,7 +251,7 @@ const MintComponent = () => {
                     className="mt-12 w-full py-3 px-4 bg-purple-500 text-white font-bold rounded-lg shadow-md hover:bg-purple-600 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-75"
                     data-mint-loading={isWhiteListMintLoading}
                     data-mint-started={isWhiteListMintStarted}
-                    onClick={() => whiteListMint?.()}
+                    onClick={() => fetchProof(address)}
                   >
                     {isWhiteListMintLoading && "Waiting for approval"}
                     {isWhiteListMintStarted && !isWhiteListMinted ? (
